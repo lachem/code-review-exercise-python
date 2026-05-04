@@ -1,8 +1,8 @@
 # Code Review
 
 Good code review requires human skills and technical skills alike. Therefore, alongside actual
-technical findings I am going to present also my thoughts and strategy. Unfortunately I have no
-additional information about the person like seniority, character, personal rapport, etc.
+technical findings I am describing also my thoughts and strategy. In  case this review is for
+an LLM generated code I would simply provide `Raw Findings` (see below).
 
 ## Strategy
 
@@ -18,7 +18,7 @@ or if there exists additional information about the author (like higher sensitiv
 In the later case I would first opt for a 30 minute call *before* publishing any feedback any
 feedback in writing.
 
-## Review pass #1
+## Review Pass #1
 
 The goal is to make the author realize as many faults in their code without overwhelming them.
 Natural place to start is to point to the test coverage, so as many defects are fixed along
@@ -29,8 +29,26 @@ test suite to also cover more complex cases and corner cases (request/response f
 bad input, etc)?
 - `app.py:17` I see you have changed the function called here. Is there any existing code
 that will become obsolete as a result?
+- `npm_deps/package.py:8` Maybe to worth consider caching results and paralellising the queries?
+What do you think?
 - `npm_deps/package.py:11` I see that old code uses `max_satisfying`, is the switch to
-`min_satisfying` is deliberate or a typo?
+`min_satisfying` deliberate or a typo?
+
+
+## Review Pass #2
+
+With the second pass it would be important to address the remaining high severity issues.
+Critically we need to assure correct error handling, safety and lack of dead code. If there are
+many changes still needed to reach that point I would schedule a short call to discuss the fixes
+and what I meant in the first review pass. If there are not so many issues remaning I would list
+them and ask if they could be fixed using questions and suggestive wording "What do you think of?",
+"Do you believe the code would improve if ...", "It seems to me that doing ... would help future
+maintainers", etc. some examples below:
+
+- `tests/e2e/test_app.py:14` TBC
+
+# Post Review
+Any remaining medium to low severity issues can be accepted as techincal debt if the team agrees
 
 ## Raw Findings
 
@@ -41,7 +59,7 @@ In that raw form they are not to be provider to another person.
 - Missing exception handling. A single failed dependency request, wrong format returned causes.
   complete request failure. Is that desired behavior?
 - Default does not seem used. Why would we accept None?
-- Consider caching get_package result for specific name + range combination.
+- Caching get_package result for specific name + range combination could improve performance.
 - Missing docstring
 
 `npm_deps/package.py:9`
@@ -52,6 +70,29 @@ In that raw form they are not to be provider to another person.
 `npm_deps/package.py:11`
 - Should not be max_satisfying?
 
+`npm_deps/package.py:19`
+- Should we parallelize here? Increases complexity but might improve performance.
+- Can we exclude cycles in dependencies? Otherwise we might end with infinite loop.
 
+`npm_deps/package.py:25`
+- Seems `get_package_version` is not used.
 
+`tests/e2e/test_app.py:14`
+- empty & invalid version format
+- empty & invalid package name format
+- actual transitive dependencies
+- at least one other package name + version
+- at least one non-existent package name
+- at least one non-existent package version
+- supplying version range
+- simulating repeated npm request failure
+- simulating invalid response format
+- checking status codes returned depending on failure type
+- retry mechanism for requests
 
+`app.py:17`
+- No validation of name and version inputs coming from the wire, can that be used as an exploit?
+- Type hint removed without an obvious reason.
+
+`app.py:18`
+- likely changes in this file become unnecessary if instead of adding code we altered the existing code in npm_deps.package
