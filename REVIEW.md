@@ -8,11 +8,11 @@ This PR has many issues. It is critical to approach the review without antagonis
 
 ## Delivery
 
-Ideally I would deliver both review passes in writing. With the exception of very junior staff or if there exists additional information about the author (like higher sensitivity to feedback). In such case I would first opt for a 30 minute call *before* publishing any feedback any feedback in writing.
+Ideally I would deliver both review passes in writing. With the exception of very junior staff or if there exists additional information about the author (like higher sensitivity to feedback). In such case I would first opt for a 30 minute call *before* publishing any feedback in writing.
 
 ## Review Pass #1
 
-The goal is to make the author realize as many faults in their code without overwhelming them. Natural place to start is to point to the test coverage, so as many defects are fixed along the way as possible.
+The goal is to make the author realize as many faults in their code without overwhelming them. Natural place to start is to point to the test coverage, so that as many defects are fixed along the way as possible.
 
 - `test_app:14` Great, thank you for adding a test! What do you think about extending the test suite to also cover more complex cases and corner cases (request/response failures, bad input, etc)?
 - `app.py:17` I see you have changed the function that is called here. Is there any existing code that will become obsolete as a result?
@@ -26,7 +26,7 @@ With the second pass it would be important to address the remaining high severit
 - `tests/e2e/test_app.py:14` "Do you think that covering also the failure & retry mechanism makes sense here?"
 
 # Post Review
-Any remaining out of scope and low severity issues can be accepted as techincal debt if the team agrees.
+Any remaining out of scope, pre-existing and low severity issues can be accepted as techincal debt if the team agrees.
 
 ## Raw Findings
 
@@ -40,14 +40,14 @@ The following list of findings are my raw notes of what I see could be improved 
 
 `npm_deps/package.py:9`
 - There already is a helper function in package_request.py that can be re-used. (medium)
-- `request_package` should also consider retry, exponential backoff etc. (high but pre-existing)
+- `request_package` should also consider retry, exponential backoff etc. (high, pre-existing)
 - Errors not checked, immediate call of .json() (high)
 
 `npm_deps/package.py:11`
-- Should not be max_satisfying?
+- Should be max_satisfying? (high)
 
 `npm_deps/package.py:19`
-- Should we parallelize here? Increases complexity but might improve performance. (medium)
+- Should we parallelize here? Increases complexity but might improve performance. Depends on the overall context where the app runs. (low, pre-existing)
 - Can we exclude cycles in dependencies? Otherwise we might end up with an infinite loop. (high)
 
 `npm_deps/package.py:25`
