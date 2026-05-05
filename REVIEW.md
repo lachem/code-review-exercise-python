@@ -1,14 +1,14 @@
 # Code Review
 
-Good code review requires human skills and technical skills alike. Therefore, alongside actual technical findings I am describing also my thoughts and strategy. In case this review is for an LLM generated code I would simply provide `Raw Findings` (see below).
+Good code review requires human skills and technical skills alike. Therefore, alongside actual technical findings, I am also describing my thoughts and strategy. In case this review is for an LLM generated code I would simply provide `Raw Findings` (see below).
 
 ## Strategy
 
-This PR has many issues. It is critical to approach the review without antagonising the author and avoid the impression of gating (many review rounds). It is a delicate balance to strike. My strategy would be to provide general direction in first review pass and then provide details in the second pass.
+This PR has many issues. It is critical to approach the review without antagonizing the author and avoid the impression of gating (many review rounds). It is a delicate balance to strike. My strategy would be to provide general direction in the first review pass and then provide details in the second pass.
 
 ## Delivery
 
-Ideally I would deliver both review passes in writing. With the exception of very junior staff or if there exists additional information about the author (like higher sensitivity to feedback). In such case I would first opt for a 30 minute call *before* publishing any feedback in writing.
+Ideally I would deliver both review passes in writing. With the exception of very junior staff, or when there is additional information about the author (like higher sensitivity to feedback). In such case I would first opt for a 30 minute call *before* publishing any feedback in writing.
 
 ## Review Pass #1
 
@@ -21,12 +21,14 @@ The goal is to make the author realize as many faults in their code without over
 
 ## Review Pass #2
 
-With the second pass it would be important to address the remaining high severity issues. Critically we need to assure correct error handling, safety and lack of dead code. If there are many changes that are still needed to reach that point I would schedule a short call to discuss the fixes and what I meant in the first review pass. If there are not so many issues remaning I would list them and ask if they could be fixed using questions and suggestive wording "What do you think of?", "Do you believe the code would improve if ...", "It seems to me that doing ... would help future maintainers", etc. some examples below:
+With the second pass it would be important to address the remaining high severity issues. Critically we need to assure correct error handling, safety and lack of dead code. If there are many changes that are still needed to reach that point I would schedule a short call to discuss the fixes and what I meant in the first review pass. If there are not so many issues remaning I would list them and ask if they could be fixed using questions and suggestive wording "What do you think of ...?", "Do you believe the code would improve if ...", "It seems to me that doing ... would help future maintainers", etc. some examples below:
 
-- `tests/e2e/test_app.py:14` "Do you think that covering also the failure & retry mechanism makes sense here?"
+- `tests/e2e/test_app.py:14` "Do you think that covering also failure and retry mechanism makes sense here?"
+- `npm_deps/package.py:8` "Would caching the results of `get_package_version` yield any noticable performance gain?
+...
 
 # Post Review
-Any remaining out of scope, pre-existing and low severity issues can be accepted as techincal debt if the team agrees.
+Any remaining out of scope, pre-existing and low severity issues can be accepted as technical debt if the team agrees.
 
 ## Raw Findings
 
@@ -44,7 +46,7 @@ The following list of findings are my raw notes of what I see could be improved 
 - Errors not checked, immediate call of .json() (high)
 
 `npm_deps/package.py:11`
-- Should be max_satisfying? (high)
+- Should this be max_satisfying? (high)
 
 `npm_deps/package.py:19`
 - Should we parallelize here? Increases complexity but might improve performance. Depends on the overall context where the app runs. (low, pre-existing)
@@ -67,7 +69,7 @@ The following list of findings are my raw notes of what I see could be improved 
 - retry mechanism for requests
 
 `app.py:17`
-- No validation of name and version inputs coming from the wire for early error. Fixed address is used internally so exploits unlikely. (medium)
+- No validation of name and version inputs coming from the wire for early error detection. Fixed address is used internally so exploits unlikely. (medium)
 - Type hint removed without an obvious reason. (medium)
 
 `app.py:18`
