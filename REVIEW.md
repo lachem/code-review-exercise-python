@@ -1,7 +1,7 @@
 # Code Review
 
 Good code review requires human skills and technical skills alike. Therefore, alongside actual
-technical findings I am describing also my thoughts and strategy. In  case this review is for
+technical findings I am describing also my thoughts and strategy. In case this review is for
 an LLM generated code I would simply provide `Raw Findings` (see below).
 
 ## Strategy
@@ -15,8 +15,8 @@ in the second pass.
 
 Ideally I would deliver both review passes in writing. With the exception of very junior staff
 or if there exists additional information about the author (like higher sensitivity to feedback).
-In the later case I would first opt for a 30 minute call *before* publishing any feedback any
-feedback in writing.
+In such case I would first opt for a 30 minute call *before* publishing any feedback any feedback
+in writing.
 
 ## Review Pass #1
 
@@ -27,9 +27,9 @@ the way as possible.
 - `test_app:14` Great, thank you for adding a test! What do you think about extending the
 test suite to also cover more complex cases and corner cases (request/response failures,
 bad input, etc)?
-- `app.py:17` I see you have changed the function called here. Is there any existing code
+- `app.py:17` I see you have changed the function that is called here. Is there any existing code
 that will become obsolete as a result?
-- `npm_deps/package.py:8` Maybe to worth consider caching results and paralellising the queries?
+- `npm_deps/package.py:8` Maybe worth to consider caching results and paralellising the queries?
 What do you think?
 - `npm_deps/package.py:11` I see that old code uses `max_satisfying`, is the switch to
 `min_satisfying` deliberate or a typo?
@@ -39,16 +39,18 @@ What do you think?
 
 With the second pass it would be important to address the remaining high severity issues.
 Critically we need to assure correct error handling, safety and lack of dead code. If there are
-many changes still needed to reach that point I would schedule a short call to discuss the fixes
-and what I meant in the first review pass. If there are not so many issues remaning I would list
-them and ask if they could be fixed using questions and suggestive wording "What do you think of?",
-"Do you believe the code would improve if ...", "It seems to me that doing ... would help future
-maintainers", etc. some examples below:
+many changes that are still needed to reach that point I would schedule a short call to discuss
+the fixes and what I meant in the first review pass. If there are not so many issues remaning
+I would list them and ask if they could be fixed using questions and suggestive wording "What
+do you think of?", "Do you believe the code would improve if ...", "It seems to me that doing
+... would help future maintainers", etc. some examples below:
 
-- `tests/e2e/test_app.py:14` TBC
+- `tests/e2e/test_app.py:14` "Do you think that covering also the failure & retry mechanism
+makes sense here?"
 
 # Post Review
 Any remaining medium to low severity issues can be accepted as techincal debt if the team agrees
+unless it was clear from the requirements that they are within scope.
 
 ## Raw Findings
 
@@ -56,8 +58,8 @@ The following list of findings are my raw notes of what I see could be improved 
 In that raw form they are not to be provider to another person.
 
 `npm_deps/package.py:8`
-- Missing exception handling. A single failed dependency request, wrong format returned causes.
-  complete request failure. Is that desired behavior?
+- Missing exception handling. A single failed dependency request, wrong format returned causes
+  complete request failure. Is that the desired behavior?
 - Default does not seem used. Why would we accept None?
 - Caching get_package result for specific name + range combination could improve performance.
 - Missing docstring
@@ -72,7 +74,7 @@ In that raw form they are not to be provider to another person.
 
 `npm_deps/package.py:19`
 - Should we parallelize here? Increases complexity but might improve performance.
-- Can we exclude cycles in dependencies? Otherwise we might end with infinite loop.
+- Can we exclude cycles in dependencies? Otherwise we might end up with an infinite loop.
 
 `npm_deps/package.py:25`
 - Seems `get_package_version` is not used.
